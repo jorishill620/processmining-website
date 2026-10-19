@@ -24,6 +24,9 @@ Product order everywhere: Monitor, Continuous, Scan.
 1. Edit `_src/nl/<page>.html` and `_src/en/<page>.html`.
 2. `python3 _build/build.py`, then open `index.html` in a browser (works from disk; no server needed).
 
+## WordPress
+The site can also run on WordPress as the **PM Site** plugin (`WordPress/pm-site.zip`, built with `python3 _build/wordpress.py`). See `WordPress/INSTALL.md` for install, setup and checks, and `RELEASES.md` for the upload routine and the version log.
+
 ## Deploy (static)
 Cloudflare Pages or Netlify: publish the `Website Code/` folder as-is (no build command needed, or run the build command above). Clean URLs work automatically (`/prijzen` for `prijzen.html`). `_headers` and `_redirects` are in place. Set the domain processmining.nu and check the canonical/hreflang URLs in the sitemap.
 

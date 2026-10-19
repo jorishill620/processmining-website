@@ -1,0 +1,18 @@
+/* =============================================================
+   processmining.nu — WordPress-only additions
+   Loaded by the PM Site plugin after pm.css. The static site
+   does not use this file.
+   ============================================================= */
+
+/* Admin bar (logged-in users only): keep the fixed menu below it. */
+.admin-bar .nav{top:32px}
+@media (max-width:782px){.admin-bar .nav{top:46px}}
+@media (max-width:600px){.admin-bar .nav{top:0}}
+
+/* WordPress's standard "for screen readers only" text. Normally in the theme's
+   CSS, which is switched off on our pages; plugins rely on it. */
+.screen-reader-text{border:0;clip:rect(1px,1px,1px,1px);clip-path:inset(50%);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute!important;width:1px;word-wrap:normal!important}
+.screen-reader-text:focus{clip:auto!important;clip-path:none;height:auto;width:auto;display:block;top:5px;left:5px;z-index:100000;padding:12px 20px;background:#fff;color:#0a0a0f;font-size:.875rem;border-radius:8px;box-shadow:0 0 0 2px var(--purple)}
+
+/* Theme leftovers printed in the footer area; our design has its own. */
+#ast-scroll-top{display:none!important}
