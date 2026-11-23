@@ -208,7 +208,7 @@ main#top{position:relative}
 #tcase{fill:#fff;stroke:var(--purple)}
 #tpulse{fill:none;stroke:var(--purple-hi);stroke-width:2;transform-box:fill-box;transform-origin:center;animation:tpulse 1.6s ease-out infinite}
 @keyframes tpulse{0%{transform:scale(.7);opacity:.9}100%{transform:scale(1.9);opacity:0}}
-.card,.step,.plan,.eng,.aud a{position:relative;z-index:2}
+.card,.step,.plan,.eng,.aud a,.lcard{position:relative;z-index:2}
 .hero__art{position:relative;padding-top:110px}
 #ring-anchor{position:absolute;left:50%;top:10px;width:0;height:0}
 .marq__view{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
