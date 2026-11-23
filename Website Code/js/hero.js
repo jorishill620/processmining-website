@@ -7,7 +7,7 @@
   hero.insertBefore(cv,hero.firstChild);
   var ctx=cv.getContext('2d');if(!ctx)return;
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var W=0,H=0,R=80,lanes=[],parts=[],focus={x:0,y:0},visible=true,raf=0,last=0,time=0;
+  var W=0,H=0,R=80,k=1,lanes=[],parts=[],focus={x:0,y:0},visible=true,raf=0,last=0,time=0;
 
   function spawn(initial){
     return {l:Math.floor(Math.random()*lanes.length),u:initial?Math.random():0,sp:.055+Math.random()*.08,
@@ -18,7 +18,6 @@
     W=r.width;H=r.height;
     cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);cv.style.width=W+'px';cv.style.height=H+'px';
     ctx.setTransform(dpr,0,0,dpr,0,0);
-    R=W>=1352?80:(W>=700?25:15);                      /* same ring size as the scroll thread */
     var n=W<700?5:9;lanes=[];
     for(var i=0;i<n;i++)lanes.push({t:(i/(n-1))*2-1});
     parts=[];var count=W<700?54:170;
@@ -28,6 +27,10 @@
   function measure(){
     var a=anchor.getBoundingClientRect(),h=hero.getBoundingClientRect();
     focus.x=a.left-h.left;focus.y=a.top-h.top;
+    /* the ring's real radius, from the scroll thread (fallback: same breakpoints as the thread) */
+    var tr=document.getElementById('tring'),rr=tr?parseFloat(tr.getAttribute('r')):0;
+    R=rr>0?rr:(W>=1352?80:(W>=700?25:15));
+    k=Math.max(.3,Math.min(1,R/80));                  /* 1 on desktop; everything else scales with the ring */
   }
   /* point and direction on lane l at progress u (cubic bezier) */
   function lane(l,u){
@@ -40,7 +43,7 @@
   }
   function draw(){
     ctx.clearRect(0,0,W,H);
-    var g=ctx.createRadialGradient(focus.x,focus.y,0,focus.x,focus.y,Math.max(150,R*3));
+    var g=ctx.createRadialGradient(focus.x,focus.y,0,focus.x,focus.y,R*3.2);
     g.addColorStop(0,'rgba(139,61,255,.20)');g.addColorStop(1,'rgba(139,61,255,0)');
     ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
     ctx.lineWidth=1;ctx.strokeStyle='rgba(255,255,255,.09)';
@@ -53,16 +56,16 @@
     ctx.strokeStyle='rgba(255,255,255,.2)';
     for(var i=0;i<lanes.length;i++){
       if(Math.abs(lanes[i].t)>.5)continue;
-      [.52,.76].forEach(function(u){var p=lane(lanes[i],u);ctx.strokeRect(p.x-5,p.y-5,10,10)});
+      [.52,.76].forEach(function(u){var p=lane(lanes[i],u),q=Math.max(2.5,5*k);ctx.strokeRect(p.x-q,p.y-q,q*2,q*2)});
     }
     parts.forEach(function(p){
-      var pt=lane(lanes[p.l],p.u),j=Math.pow(1-p.u,1.6)*p.amp*46*Math.sin(p.ph+time*1.3+p.u*9);
+      var pt=lane(lanes[p.l],p.u),j=Math.pow(1-p.u,1.6)*p.amp*46*k*Math.sin(p.ph+time*1.3+p.u*9);
       var x=pt.x+pt.nx*j,y=pt.y+pt.ny*j,a=Math.min(1,p.u*8)*(p.u>.93?(1-p.u)/.07:1);
       if(p.dev){
-        ctx.fillStyle='rgba(164,104,255,'+(.16*a)+')';ctx.beginPath();ctx.arc(x,y,6,0,6.283);ctx.fill();
-        ctx.fillStyle='rgba(190,150,255,'+(.95*a)+')';ctx.beginPath();ctx.arc(x,y,2.2,0,6.283);ctx.fill();
+        ctx.fillStyle='rgba(164,104,255,'+(.16*a)+')';ctx.beginPath();ctx.arc(x,y,6*Math.max(.55,k),0,6.283);ctx.fill();
+        ctx.fillStyle='rgba(190,150,255,'+(.95*a)+')';ctx.beginPath();ctx.arc(x,y,2.2*Math.max(.65,k),0,6.283);ctx.fill();
       }else{
-        ctx.fillStyle='rgba(255,255,255,'+(.78*a)+')';ctx.beginPath();ctx.arc(x,y,1.6,0,6.283);ctx.fill();
+        ctx.fillStyle='rgba(255,255,255,'+(.78*a)+')';ctx.beginPath();ctx.arc(x,y,1.6*Math.max(.65,k),0,6.283);ctx.fill();
       }
     });
   }
