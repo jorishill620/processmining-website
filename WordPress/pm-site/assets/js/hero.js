@@ -7,7 +7,7 @@
   hero.insertBefore(cv,hero.firstChild);
   var ctx=cv.getContext('2d');if(!ctx)return;
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var W=0,H=0,R=80,k=1,lanes=[],parts=[],focus={x:0,y:0},visible=true,raf=0,last=0,time=0;
+  var W=0,H=0,R=80,k=1,L=900,lanes=[],parts=[],focus={x:0,y:0},visible=true,raf=0,last=0,time=0;
 
   function spawn(initial){
     return {l:Math.floor(Math.random()*lanes.length),u:initial?Math.random():0,sp:.055+Math.random()*.08,
@@ -20,22 +20,26 @@
     ctx.setTransform(dpr,0,0,dpr,0,0);
     var n=W<700?5:9;lanes=[];
     for(var i=0;i<n;i++)lanes.push({t:(i/(n-1))*2-1});
-    parts=[];var count=W<700?54:170;
-    for(i=0;i<count;i++)parts.push(spawn(true));
     measure();
+    parts=[];var count=Math.round(Math.max(48,Math.min(170,L/5.6)));
+    for(i=0;i<count;i++)parts.push(spawn(true));
   }
   function measure(){
-    var a=anchor.getBoundingClientRect(),h=hero.getBoundingClientRect();
-    focus.x=a.left-h.left;focus.y=a.top-h.top;
-    /* the ring's real radius, from the scroll thread (fallback: same breakpoints as the thread) */
-    var tr=document.getElementById('tring'),rr=tr?parseFloat(tr.getAttribute('r')):0;
-    R=rr>0?rr:(W>=1352?80:(W>=700?25:15));
-    k=Math.max(.3,Math.min(1,R/80));                  /* 1 on desktop; everything else scales with the ring */
+    var h=hero.getBoundingClientRect(),tr=document.getElementById('tring'),rr=tr?parseFloat(tr.getAttribute('r')):0;
+    if(rr>0){                                          /* the ring drawn by the scroll thread: exact centre and radius */
+      var r=tr.getBoundingClientRect();
+      focus.x=r.left+r.width/2-h.left;focus.y=r.top+r.height/2-h.top;R=rr;
+    }else{                                             /* thread not ready yet: anchor + same breakpoints as the thread */
+      var a=anchor.getBoundingClientRect();
+      focus.x=a.left-h.left;focus.y=a.top-h.top;R=W>=1352?80:(W>=700?25:15);
+    }
+    k=Math.max(.2,Math.min(1,R/80));                   /* 1 on desktop; everything scales with the ring */
+    L=Math.min(focus.x+30,Math.max(R*12,340));         /* lanes start this far left of the ring, not at the page edge */
   }
   /* point and direction on lane l at progress u (cubic bezier) */
   function lane(l,u){
-    var spread=W<700?Math.min(H*.16,110):Math.min(H*.34,260);
-    var x0=-30,y0=focus.y+l.t*spread,x3=focus.x-R*.95,y3=focus.y+l.t*R*.55;
+    var spread=Math.min(H*.34,R*3.25);
+    var x0=focus.x-L,y0=focus.y+l.t*spread,x3=focus.x-R*.95,y3=focus.y+l.t*R*.55;
     var x1=x0+(x3-x0)*.45,y1=y0,x2=x0+(x3-x0)*.72,y2=y3,m=1-u;
     var x=m*m*m*x0+3*m*m*u*x1+3*m*u*u*x2+u*u*u*x3,y=m*m*m*y0+3*m*m*u*y1+3*m*u*u*y2+u*u*u*y3;
     var dx=3*m*m*(x1-x0)+6*m*u*(x2-x1)+3*u*u*(x3-x2),dy=3*m*m*(y1-y0)+6*m*u*(y2-y1)+3*u*u*(y3-y2),d=Math.hypot(dx,dy)||1;
@@ -46,7 +50,7 @@
     var g=ctx.createRadialGradient(focus.x,focus.y,0,focus.x,focus.y,R*3.2);
     g.addColorStop(0,'rgba(139,61,255,.20)');g.addColorStop(1,'rgba(139,61,255,0)');
     ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-    ctx.lineWidth=1;ctx.strokeStyle='rgba(255,255,255,.09)';
+    ctx.lineWidth=1;ctx.strokeStyle='rgba(255,255,255,.12)';
     lanes.forEach(function(l){
       ctx.beginPath();
       for(var k=0;k<=40;k++){var p=lane(l,k/40);if(k)ctx.lineTo(p.x,p.y);else ctx.moveTo(p.x,p.y)}
