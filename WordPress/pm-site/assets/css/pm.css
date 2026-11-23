@@ -506,3 +506,9 @@ html:not(.js) .chapter__cv{display:none}
   .mini *,.mini::after,.vl::after,.fcta__mark,.win *{animation:none!important;transition:none!important}
   .fcta{transition:none}
 }
+
+/* footer wordmark: oversized logo text fading from light grey to black */
+.foot__wm{overflow:hidden;padding:0 2vw;margin:6px 0 0;text-align:center;line-height:1;user-select:none}
+.foot__wm span{display:inline-block;font:800 10.3vw/1 var(--h);letter-spacing:-.045em;white-space:nowrap;padding-bottom:.1em;
+  background:linear-gradient(180deg,rgba(255,255,255,.24) 22%,rgba(255,255,255,.035) 78%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.foot__wm+.wrap .legal{margin-top:6px}

@@ -244,6 +244,9 @@ def footer(lang):
       </div>
       {cols}
     </div>
+  </div>
+  <div class="foot__wm" aria-hidden="true"><span>processmining.nu</span></div>
+  <div class="wrap">
     <div class="legal"><span>{t["legal"]}</span><span>{t["legal2"]}</span></div>
   </div>
 </footer>'''
