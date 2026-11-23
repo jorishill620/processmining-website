@@ -150,26 +150,25 @@
       }
       return null;
     }
-    function seg(d,len,delay,plug){var e=mk('path',{class:'tstub',d:d,'stroke-width':stw},tx);e.style.strokeDasharray=len;e.style.strokeDashoffset=len;plug.segs.push({el:e,len:len,delay:delay})}
+    function seg(d,len,delay,plug,dur,wd){var e=mk('path',{class:'tstub',d:d,'stroke-width':wd||stw},tx);e.style.strokeDasharray=len;e.style.strokeDashoffset=len;if(dur)e.style.transitionDuration=dur+'s';plug.segs.push({el:e,len:len,delay:delay})}
     function nodeAt(x,y,delay,plug){plug.nodes.push({node:mk('circle',{class:'tpn',cx:x,cy:y,r:rn},tx),delay:delay})}
     function newPlug(l,stagger){return {els:[],segs:[],nodes:[],l:l,on:false,timers:[],stagger:stagger||0}}
     var seen=[];
 
-    /* 1) the connector circuit in "Koppelingen": a bus above every row of cards, a drop to every card */
+    /* 1) "Koppelingen": the line strikes through every row of logo cards and leaves at the end; the cards light
+       up one after another as it passes. No drops, no end nodes. */
     var grid=page.querySelector('.logos');
     if(grid){
-      var gsec=grid.closest('section'),items=[].slice.call(grid.children).map(function(el){return {el:el,p:pos(el),w:el.offsetWidth}}),rows={};
+      var gsec=grid.closest('section'),items=[].slice.call(grid.children).map(function(el){return {el:el,p:pos(el),w:el.offsetWidth,h:el.offsetHeight}}),rows={};
       items.forEach(function(it){var key=Math.round(it.p.y/4);(rows[key]=rows[key]||[]).push(it)});
       var okAll=true,made=[];
       Object.keys(rows).map(Number).sort(function(a,b){return a-b}).forEach(function(key){
-        var row=rows[key].sort(function(a,b){return a.p.x-b.p.x}),top=row[0].p.y,busY=top-22,ln=onLine(busY);
+        var row=rows[key].sort(function(a,b){return a.p.x-b.p.x}),midY=row[0].p.y+row[0].h/2,ln=onLine(midY);
         if(!ln||!ln.left){okAll=false;return}
-        var cx=row.map(function(it){return it.p.x+it.w/2}),far=cx[cx.length-1],pl=newPlug(ln.l,120);
-        seg('M'+ln.x+' '+busY+' L'+far+' '+busY,far-ln.x,0,pl);
-        row.forEach(function(it,i){
-          var drop=22-rn,dl=.3+i*.12;
-          seg('M'+cx[i]+' '+busY+' L'+cx[i]+' '+(top-rn),drop,dl,pl);nodeAt(cx[i],top-rn,dl+.25,pl);pl.els.push(it.el);
-        });
+        var last=row[row.length-1],single=row.length===1,far=single?row[0].p.x:Math.min(last.p.x+last.w+24,W-4),pl=newPlug(ln.l,120);
+        /* a thin strike-through the logos; the text bar (a single card) is only touched at its left edge */
+        seg('M'+ln.x+' '+midY+' L'+far+' '+midY,far-ln.x,0,pl,.85,Math.max(2,sw*.17));
+        row.forEach(function(it){pl.els.push(it.el)});
         made.push(pl);
       });
       if(okAll&&made.length){made.forEach(function(pl){plugs.push(pl)});seen.push(gsec)}
