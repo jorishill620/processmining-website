@@ -15,7 +15,7 @@ cd "Website Code" && python3 _build/wordpress.py
 
 The build rebuilds the static site, converts every page to a template, checks every internal
 link, syntax-checks the PHP and runs a smoke test against a small stand-in for WordPress
-(176 checks). A failing check stops the build.
+(180 checks). A failing check stops the build.
 
 ## Needs
 
@@ -59,7 +59,8 @@ of a page point at each other with `hreflang` links.
 ## Check
 
 - [ ] Every page in the table shows "design".
-- [ ] Home: the purple scroll thread draws as you scroll, the logo strip moves, the menu "Voor wie" opens.
+- [ ] Home: the purple scroll thread draws as you scroll, the hero canvas runs, the product window demo loops, the chapter words appear, the logo strip moves, the menu "Voor wie" opens.
+- [ ] The floating pill appears after the hero and hides near the closing call-to-action; the header turns light over light sections.
 - [ ] Language switch (NL / EN) goes to the same page in the other language.
 - [ ] Phone: menu opens, no horizontal scrolling.
 - [ ] A non-existing address shows the 404 page.

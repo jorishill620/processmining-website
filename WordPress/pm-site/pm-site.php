@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       PM Site
  * Description:       The processmining.nu design (Dutch and English) as page templates. Set up under PM Site in the admin menu. Generated from the static site; do not edit by hand.
- * Version:           1.0.20261120.0917
+ * Version:           1.0.20261123.0838
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Coney Solutions
@@ -163,8 +163,12 @@ add_action( 'wp_enqueue_scripts', function () {
 	wp_enqueue_style( 'pm-site', pm_site_asset( 'css/pm.css' ), array( 'pm-site-fonts' ), $version );
 	wp_enqueue_style( 'pm-site-wp', pm_site_asset( 'css/wordpress.css' ), array( 'pm-site' ), $version );
 	wp_enqueue_script( 'pm-site', pm_site_asset( 'js/site.js' ), array(), $version, true );
-	if ( in_array( $current, pm_site( 'thread' ), true ) ) {
-		wp_enqueue_script( 'pm-site-thread', pm_site_asset( 'js/thread.js' ), array( 'pm-site' ), $version, true );
+	// Page scripts (scroll thread, hero canvas, chapters, demo), listed per template in the generated data.
+	$scripts = pm_site( 'scripts' );
+	if ( isset( $scripts[ $current ] ) ) {
+		foreach ( $scripts[ $current ] as $name ) {
+			wp_enqueue_script( 'pm-site-' . $name, pm_site_asset( 'js/' . $name . '.js' ), array( 'pm-site' ), $version, true );
+		}
 	}
 }, 20 );
 

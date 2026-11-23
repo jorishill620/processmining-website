@@ -28,7 +28,7 @@ Fill in the "Who" column and keep logins in the company password manager, not in
 2. Change it in both languages. Do not edit the built pages (`Website Code/*.html`, `Website Code/en/*.html`) or anything in `WordPress/pm-site/`: they are generated.
 3. Rebuild (needs Python 3 and, for the plugin, PHP): from `Website Code/` run
    - `python3 _build/build.py` — rebuilds all pages
-   - `python3 _build/wordpress.py` — rebuilds the static pages and `WordPress/pm-site.zip`, checks the PHP and runs 176 tests
+   - `python3 _build/wordpress.py` — rebuilds the static pages and `WordPress/pm-site.zip`, checks the PHP and runs about 180 tests
 4. Upload the new `WordPress/pm-site.zip` as described in `RELEASES.md` (staging first), and add a row to the log there.
 
 Shared parts (menu, footer, logo strip, pricing cards, closing call-to-action) are in `_build/build.py`.

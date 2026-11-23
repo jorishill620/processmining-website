@@ -124,7 +124,9 @@ check( $pages['nl:index']['path'] === 'home' && $pages['en:index']['path'] === '
 foreach ( $pages as $full => $p ) {
 	check( file_exists( $PLUGIN . 'templates/' . basename( $p['template'] ) ), "template file for $full" );
 }
-check( in_array( 'pm-site/nl-home.php', pm_site( 'thread' ), true ) && in_array( 'pm-site/en-home.php', pm_site( 'thread' ), true ), 'thread script on both homes' );
+$sc = pm_site( 'scripts' );
+check( isset( $sc['pm-site/nl-home.php'], $sc['pm-site/en-home.php'] ) && in_array( 'hero', $sc['pm-site/nl-home.php'], true ) && in_array( 'chapters', $sc['pm-site/en-home.php'], true ), 'page scripts listed for both homes' );
+check( ! isset( $sc['pm-site/nl-aanpak.php'] ), 'no page scripts on sub pages' );
 
 /* 3. Connect all pages (admin) */
 pm_site_setup_apply();
@@ -163,6 +165,10 @@ foreach ( $templates as $tkey => $label ) {
 	check( false !== strpos( $out, 'https://stage.test/wp-content/plugins/pm-site/assets/logos/' ) || false === strpos( $out, 'assets/logos' ), "$tkey assets resolve" );
 }
 check( 0 === $bad, 'no template threw' );
+ob_start(); include $PLUGIN . 'templates/nl-home.php'; $nlh = ob_get_clean();
+ob_start(); include $PLUGIN . 'templates/nl-contact.php'; $nlc = ob_get_clean();
+check( false !== strpos( $nlh, 'id="fcta"' ) && false === strpos( $nlc, 'id="fcta"' ), 'floating pill on the home page, not on contact' );
+check( 4 === substr_count( $nlh, 'class="chapter__cv"' ) && false !== strpos( $nlh, 'id="win"' ), 'chapters and product window on the home page' );
 ob_start(); include $PLUGIN . 'templates/en-home.php'; $en = ob_get_clean();
 check( false !== strpos( $en, 'href="https://stage.test/en/approach/"' ) || false !== strpos( $en, 'https://stage.test/en/' ), 'english home links to english pages' );
 check( false !== strpos( $en, 'data-labels=' ), 'thread data kept on home' );
@@ -190,10 +196,10 @@ $STYLES->registered = array( 'astra-theme-css' => (object) array( 'src' => 'http
 	'elementor-frontend' => (object) array( 'src' => 'https://x.test/wp-content/plugins/elementor/frontend.css' ), 'some-plugin' => (object) array( 'src' => 'https://x.test/wp-content/plugins/cookie/style.css' ) );
 do_action( 'wp_enqueue_scripts' );
 check( in_array( 'style:pm-site', $ENQ, true ) && in_array( 'script:pm-site', $ENQ, true ), 'our css and js are enqueued' );
-check( in_array( 'script:pm-site-thread', $ENQ, true ), 'thread script on the home page' );
+check( in_array( 'script:pm-site-thread', $ENQ, true ) && in_array( 'script:pm-site-hero', $ENQ, true ) && in_array( 'script:pm-site-chapters', $ENQ, true ) && in_array( 'script:pm-site-demo', $ENQ, true ), 'thread, hero, chapters and demo scripts on the home page' );
 check( $STYLES->queue === array( 'some-plugin' ), 'theme and builder css removed, other plugins kept: ' . implode( ',', $STYLES->queue ) );
 $ENQ = array(); $Q = array( 'id' => $connected['nl:aanpak'] ); do_action( 'wp_enqueue_scripts' );
-check( ! in_array( 'script:pm-site-thread', $ENQ, true ), 'thread script not on other pages' );
+check( ! in_array( 'script:pm-site-thread', $ENQ, true ) && ! in_array( 'script:pm-site-hero', $ENQ, true ), 'page scripts not on other pages' );
 
 /* 8. SEO and hreflang */
 $Q = array( 'id' => $connected['nl:aanpak'] );
