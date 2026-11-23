@@ -271,7 +271,7 @@ main#top{position:relative}
 
 /* logos */
 .lg{display:block;height:30px;width:auto}
-.logos{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.logos{display:grid;grid-template-columns:repeat(4,1fr);gap:44px 16px}
 .lcard{display:grid;place-items:center;height:112px;border:1px solid #e4e0ee;border-radius:var(--r);background:#fff;padding:0 24px;transition:.25s}
 .lcard:hover{border-color:var(--purple);transform:translateY(-4px)}
 .lcard img{max-height:34px;max-width:100%;width:auto;filter:brightness(0);opacity:.75}
@@ -504,3 +504,15 @@ html:not(.js) .chapter__cv{display:none}
 .plan,.win{transition:box-shadow .4s}
 .plugged{box-shadow:0 0 0 1.5px var(--purple),0 22px 60px -18px rgba(139,61,255,.6)!important}
 @media (prefers-reduced-motion:reduce){.tstub{transition:none}.tpn.on{animation:none;opacity:1}}
+
+/* softer lit state for the many logo cards; the highlighted plan gets its own show */
+.lcard.plugged{box-shadow:0 0 0 1.5px var(--purple),0 14px 30px -14px rgba(139,61,255,.5)!important}
+.plan.pop.plugged{box-shadow:0 0 0 2px #fff,0 30px 80px -16px rgba(139,61,255,.9)!important}
+.plan.pop::before,.plan.pop::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0}
+.plan.pop.plugged::before{inset:-2px;border:2px solid rgba(255,255,255,.95);animation:plan-ring 1.2s ease-out 1 both}
+.plan.pop.plugged::after{background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.38) 50%,transparent 70%) -120% 0/60% 100% no-repeat;opacity:1;animation:plan-shine 1.3s .15s ease-out 1 both}
+.plan.pop.plugged .tag{animation:tag-pop .7s .25s both}
+@keyframes plan-ring{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.07,1.04)}}
+@keyframes plan-shine{0%{background-position:-120% 0}100%{background-position:220% 0}}
+@keyframes tag-pop{0%{transform:scale(1)}40%{transform:scale(1.25) rotate(-3deg)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.plan.pop.plugged::before,.plan.pop.plugged::after,.plan.pop.plugged .tag{animation:none}}

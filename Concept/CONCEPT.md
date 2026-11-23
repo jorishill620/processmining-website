@@ -2,7 +2,7 @@
 
 Status: updated 7 Oct 2026. Pricing and numbers are **hypotheses to validate**, not quotes.
 
-**Decisions (7 Oct 2026, Joris):** sold as a Coney Solutions service; licences are included in the price and Conify has no role; Process Science and Evidant have shown interest in the project; product order on the site is Monitor, Continuous, Scan; no client names anywhere; the system connectors (SAP, Oracle, Exact etc.) are a key selling point and are promoted with logos; the lead form comes later.
+**Decisions (7 Oct 2026, Joris):** sold as a Coney Solutions service; licences are included in the price and Conify has no role; Process Science and Evidant have shown interest in the project; product order on the site is now Scan (labelled one-off), Monitor, Continuous (highlighted as most popular; changed Nov 2026); no client names anywhere; the system connectors (SAP, Oracle, Exact etc.) are a key selling point and are promoted with logos; the lead form comes later.
 
 ## 1. The idea in one line
 Process mining as a managed service: a fixed monthly subscription, and we do the mining. The client gets findings, a live dashboard and a monthly decision meeting, without buying licences, hiring a specialist or building a data pipeline.
@@ -32,9 +32,9 @@ Pricing per **process per year** (not per user): it matches the value, and the c
 
 | Package (site order) | What | Indicative price |
 |---|---|---|
+| **Scan** | One process, one extraction, 4-week analysis, findings workshop and report. The entry offer and the lead generator. | one-off €7,500–12,500 (credited against a subscription if signed within 60 days) |
 | **Monitor** | One process kept live: monthly data refresh, dashboard, monthly insight session, quarterly improvement plan. | €2,250–3,000 / month, 12-month term, plus onboarding €5,000 |
 | **Continuous** | Up to 3 processes, controls monitoring for audit/GRC, priority analyst hours, action tracking. | €5,500–7,500 / month, plus onboarding |
-| **Scan** | One process, one extraction, 4-week analysis, findings workshop and report. The entry offer and the lead generator. | one-off €7,500–12,500 (credited against a subscription if signed within 60 days) |
 | **Partner / white-label** | For accountancy firms: multi-client set-up, shared branding, volume rate. | custom |
 
 Rules of thumb
@@ -77,6 +77,7 @@ One continuous SVG path drawn by scroll, no library (plain JS + `requestAnimatio
 - **Path:** orthogonal, round caps, 18px stroke on desktop (9px tablet, 5px mobile; it was 32px in the first version), corner radius 2x stroke snapped to 16. Vertical runs sit in the page margins; horizontal shifts sit at section boundaries (7 sections marked `data-shift`). Route is measured at runtime and rebuilt on resize, font load and layout change (ResizeObserver).
 - **Draw:** `stroke-dasharray` = path length, `stroke-dashoffset` set every frame from scroll. The pen tip sits at 62% of the viewport height. Deviation from a plain `progress = (scroll - start)/(end - start)`: progress is mapped per segment, so the tip stays at the scroll line on vertical runs and each horizontal shift is drawn while the tip crosses a 160px band (otherwise the long horizontal runs make the tip lag behind).
 - **Look (Nov 2026 redesign):** a glowing tube instead of a flat slab: a soft translucent halo, a thin light core, solid purple (no gradient) and a faint dotted track showing the route still to come. Hard switch to white inside the call-to-action as before.
+- **Koppelingen circuit:** the line connects to every connector card (a bus above each row, a drop and node per card, cards light up one after another). The "Voor wie" plug was removed.
 - **Plugs (interaction):** where the line runs right next to a card with no text in between, a short branch grows out to it when the pen tip passes, ends in a node, and the card lights up with a purple outline. One per section, picked automatically (a Werkwijze step, a connector logo, a "what you get" card, an audience card, a pricing plan). Reduced motion shows them in their final state.
 - **Start / end:** hollow ring in the hero (scales 0.4 to 1 in 600ms once drawing starts); solid end dot with halo inside the CTA block, shown at 100%. Gradient with a hard purple-to-white switch at the top of the CTA block.
 - **Accessibility:** `prefers-reduced-motion` shows the fully drawn, static line.

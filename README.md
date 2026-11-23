@@ -18,7 +18,7 @@ PM.nu Full Website/
 ## Pages (NL / EN)
 Home · Aanpak / Approach · Prijzen / Pricing · Process Scan · Koppelingen / Connectors · Finance · Internal audit (+ risk & compliance) · Accountants · Voorbeelden / Examples · Over ons / About · Contact · Privacy · 404.
 Shared header, footer, logo grid, pricing cards and closing call-to-action live in `_build/build.py` (per language). Links in sources use `{{link:<dutch-slug>}}`.
-Product order everywhere: Monitor, Continuous, Scan.
+Product order everywhere: Scan (label "Eenmalig"), Monitor, Continuous (highlighted, label "Meest gekozen").
 
 ## Edit and preview
 1. Edit `_src/nl/<page>.html` and `_src/en/<page>.html`.

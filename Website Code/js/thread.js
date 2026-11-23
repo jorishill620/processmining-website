@@ -38,6 +38,18 @@
     var e=pts[pts.length-1];return d+' L'+e[0]+' '+e[1];
   }
 
+  /* a plug switches on (branches draw, nodes pop, cards light up one after another) or off */
+  function setPlug(p,on){
+    p.on=on;p.timers.forEach(clearTimeout);p.timers=[];
+    p.segs.forEach(function(s){s.el.style.transitionDelay=on&&!reduce?s.delay+'s':'0s';s.el.style.strokeDashoffset=on?0:s.len});
+    p.nodes.forEach(function(n){n.node.style.animationDelay=on&&!reduce?(n.delay+.3)+'s':'0s';n.node.classList.toggle('on',on)});
+    p.els.forEach(function(e,i){
+      if(!on||reduce){e.classList.toggle('plugged',on);return}
+      p.timers.push(setTimeout(function(){e.classList.add('plugged')},350+p.stagger*i));
+    });
+  }
+  function clearPlug(p){p.timers.forEach(clearTimeout);p.els.forEach(function(e){e.classList.remove('plugged')})}
+
   function layout(){
     var W=page.clientWidth,H=page.offsetHeight;
     pageTop=page.getBoundingClientRect().top+window.scrollY;
@@ -124,28 +136,61 @@
       nodes.push({el:g,l:mid});
     });
 
-    /* plugs: where the line runs right next to a card (no text in between), a branch grows out to it and the
-       card lights up when the pen tip passes. One per section, only for cards on the same side as the line. */
-    plugs.forEach(function(p){p.el.classList.remove('plugged')});plugs=[];
+    /* plugs: where the line runs right next to cards, branches grow out to them and the cards light up when
+       the pen tip passes. Koppelingen: every card gets its own connector (a small circuit, row by row).
+       Elsewhere: one card per section, the highlighted one first. Never across text. */
+    plugs.forEach(clearPlug);plugs=[];
     var cum=[],c0=0;segs.forEach(function(s){cum.push(c0);c0+=s.l});
-    var seen=[],marg=r*1.6+sw,cands=[].slice.call(page.querySelectorAll('.step,.lcard,.sec--bento .card,.aud a,.plan,.win'));
-    cands.map(function(el){return {el:el,p:pos(el)}}).sort(function(a,b){return a.p.y-b.p.y}).forEach(function(c){
-      var el=c.el,sec=el.closest('section');if(!sec||seen.indexOf(sec)>-1)return;
-      var w=el.offsetWidth,h=el.offsetHeight,yt=c.p.y+Math.min(h/2,70),j=-1;
+    var marg=r*1.6+sw,rn=Math.max(4,sw*.38),stw=Math.max(2,sw*.28);
+    function onLine(yt){
       for(var s=0;s<segs.length;s++){
         if(segs[s].h)continue;
         var ya=Math.min(pts[s][1],pts[s+1][1]),yb2=Math.max(pts[s][1],pts[s+1][1]);
-        if(yt>ya+marg&&yt<yb2-marg){j=s;break}
+        if(yt>ya+marg&&yt<yb2-marg)return {x:pts[s][0],left:Math.abs(pts[s][0]-xL)<2,l:(cum[s]+Math.abs(yt-pts[s][1]))*k};
       }
-      if(j<0)return;
-      var x=pts[j][0],left=Math.abs(x-xL)<2,edge=left?c.p.x:c.p.x+w,target=left?contentLeft:W-contentLeft;
+      return null;
+    }
+    function seg(d,len,delay,plug){var e=mk('path',{class:'tstub',d:d,'stroke-width':stw},tx);e.style.strokeDasharray=len;e.style.strokeDashoffset=len;plug.segs.push({el:e,len:len,delay:delay})}
+    function nodeAt(x,y,delay,plug){plug.nodes.push({node:mk('circle',{class:'tpn',cx:x,cy:y,r:rn},tx),delay:delay})}
+    function newPlug(l,stagger){return {els:[],segs:[],nodes:[],l:l,on:false,timers:[],stagger:stagger||0}}
+    var seen=[];
+
+    /* 1) the connector circuit in "Koppelingen": a bus above every row of cards, a drop to every card */
+    var grid=page.querySelector('.logos');
+    if(grid){
+      var gsec=grid.closest('section'),items=[].slice.call(grid.children).map(function(el){return {el:el,p:pos(el),w:el.offsetWidth}}),rows={};
+      items.forEach(function(it){var key=Math.round(it.p.y/4);(rows[key]=rows[key]||[]).push(it)});
+      var okAll=true,made=[];
+      Object.keys(rows).map(Number).sort(function(a,b){return a-b}).forEach(function(key){
+        var row=rows[key].sort(function(a,b){return a.p.x-b.p.x}),top=row[0].p.y,busY=top-22,ln=onLine(busY);
+        if(!ln||!ln.left){okAll=false;return}
+        var cx=row.map(function(it){return it.p.x+it.w/2}),far=cx[cx.length-1],pl=newPlug(ln.l,120);
+        seg('M'+ln.x+' '+busY+' L'+far+' '+busY,far-ln.x,0,pl);
+        row.forEach(function(it,i){
+          var drop=22-rn,dl=.3+i*.12;
+          seg('M'+cx[i]+' '+busY+' L'+cx[i]+' '+(top-rn),drop,dl,pl);nodeAt(cx[i],top-rn,dl+.25,pl);pl.els.push(it.el);
+        });
+        made.push(pl);
+      });
+      if(okAll&&made.length){made.forEach(function(pl){plugs.push(pl)});seen.push(gsec)}
+      else{                                                    /* line on the wrong side here: undo what was drawn */
+        made.forEach(function(pl){pl.segs.forEach(function(s){tx.removeChild(s.el)});pl.nodes.forEach(function(n){tx.removeChild(n.node)})});
+      }
+    }
+
+    /* 2) one card per section */
+    var cands=[].slice.call(page.querySelectorAll('.step,.sec--bento .card,.plan,.win'));
+    cands.map(function(el){return {el:el,p:pos(el)}}).sort(function(a,b){
+      var pa=a.el.classList.contains('pop')?0:1,pb=b.el.classList.contains('pop')?0:1;return pa-pb||a.p.y-b.p.y;
+    }).forEach(function(c){
+      var el=c.el,sec=el.closest('section');if(!sec||seen.indexOf(sec)>-1)return;
+      var w=el.offsetWidth,h=el.offsetHeight,yt=c.p.y+Math.min(h/2,70),ln=onLine(yt);
+      if(!ln)return;
+      var edge=ln.left?c.p.x:c.p.x+w,target=ln.left?contentLeft:W-contentLeft;
       if(Math.abs(edge-target)>8)return;                       /* not at the content edge: text would be in the way */
-      var rn=Math.max(4,sw*.38),dx=Math.abs(edge-x)-rn;if(dx<4)return;
-      var nx=left?edge-rn:edge+rn;
-      var stub=mk('path',{class:'tstub',d:'M'+x+' '+yt+' L'+nx+' '+yt,'stroke-width':Math.max(2,sw*.28)},tx);
-      stub.style.strokeDasharray=dx;stub.style.strokeDashoffset=dx;
-      var node=mk('circle',{class:'tpn',cx:nx,cy:yt,r:rn},tx);
-      plugs.push({el:el,stub:stub,node:node,len:dx,l:(cum[j]+Math.abs(yt-pts[j][1]))*k});seen.push(sec);
+      var dx=Math.abs(edge-ln.x)-rn;if(dx<4)return;
+      var nx=ln.left?edge-rn:edge+rn,pl=newPlug(ln.l,0);
+      seg('M'+ln.x+' '+yt+' L'+nx+' '+yt,dx,0,pl);nodeAt(nx,yt,.1,pl);pl.els.push(el);plugs.push(pl);seen.push(sec);
     });
     ready=true;draw();
   }
@@ -168,7 +213,7 @@
     if(l>0)ring.classList.add('on');else ring.classList.remove('on');
     dot.style.opacity=l>=len-0.5?1:0;
     nodes.forEach(function(n){n.el.classList.toggle('on',l>=n.l)});
-    plugs.forEach(function(p){var on=l>=p.l;p.stub.style.strokeDashoffset=on?0:p.len;p.node.classList.toggle('on',on);p.el.classList.toggle('plugged',on)});
+    plugs.forEach(function(p){var on=l>=p.l;if(on!==p.on)setPlug(p,on)});
     brs.forEach(function(b){var on=l>=b.mid;b.path.style.strokeDashoffset=on?0:b.len;if(b.chip)b.chip.classList.toggle('on',on)});
     if(!reduce&&l>0&&l<len-0.5){
       var pt=path.getPointAtLength(l);

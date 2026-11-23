@@ -50,18 +50,9 @@ T = {
   "cta_b1": "Vraag je gratis X-ray aan", "cta_b2": "Plan een kennismaking", "cta_s1": "Gratis%20X-ray", "cta_s2": "Kennismaking",
   "cases": "cases",
   "plans": [
-    {"n": "Monitor", "pop": "Meest gekozen", "for": "Eén proces blijvend onder controle, met maandelijkse acties.", "amt": "v.a. € 2.250", "per": " / maand",
-     "one": "+ eenmalige onboarding, looptijd 12 maanden",
-     "f": ["Maandelijkse data-verversing", "Live dashboard", "Maandelijkse inzichtsessie", "Kwartaalplan voor verbetering", "Licenties inbegrepen"],
-     "b": "Plan een gesprek", "href": "contact"},
-    {"n": "Continuous", "for": "Meerdere processen en doorlopende controles voor audit en GRC.", "amt": "v.a. € 5.500", "per": " / maand",
-     "one": "tot 3 processen, + onboarding",
-     "f": ["Alles uit Monitor", "Continue controlemonitoring", "Extra analistuuren op afroep", "Actietracking", "Licenties inbegrepen"],
-     "b": "Vraag een voorstel", "href": "contact"},
-    {"n": "Scan", "for": "Ontdek in vier weken wat er in één proces speelt.", "amt": "v.a. € 7.500", "per": "",
-     "one": "eenmalig, verrekend bij een abonnement",
-     "f": ["Eén proces, één data-extractie", "Analyse en rapport", "Bevindingen-workshop", "Verrekend binnen 60 dagen"],
-     "b": "Bekijk de scan", "href": "scan"},
+    {'n': 'Scan', 'for': 'Ontdek in vier weken wat er in één proces speelt.', 'amt': 'v.a. € 7.500', 'per': '', 'one': 'eenmalig, verrekend bij een abonnement', 'f': ['Eén proces, één data-extractie', 'Analyse en rapport', 'Bevindingen-workshop', 'Verrekend binnen 60 dagen'], 'b': 'Bekijk de scan', 'href': 'scan', 'tag': 'Eenmalig'},
+    {'n': 'Monitor', 'for': 'Eén proces blijvend onder controle, met maandelijkse acties.', 'amt': 'v.a. € 2.250', 'per': ' / maand', 'one': '+ eenmalige onboarding, looptijd 12 maanden', 'f': ['Maandelijkse data-verversing', 'Live dashboard', 'Maandelijkse inzichtsessie', 'Kwartaalplan voor verbetering', 'Licenties inbegrepen'], 'b': 'Plan een gesprek', 'href': 'contact'},
+    {'n': 'Continuous', 'for': 'Meerdere processen en doorlopende controles voor audit en GRC.', 'amt': 'v.a. € 5.500', 'per': ' / maand', 'one': 'tot 3 processen, + onboarding', 'f': ['Alles uit Monitor', 'Continue controlemonitoring', 'Extra analistuuren op afroep', 'Actietracking', 'Licenties inbegrepen'], 'b': 'Vraag een voorstel', 'href': 'contact', 'tag': 'Meest gekozen', 'hot': True},
   ],
  },
  "en": {
@@ -88,18 +79,9 @@ T = {
   "cta_b1": "Request your free X-ray", "cta_b2": "Book an introduction", "cta_s1": "Free%20X-ray", "cta_s2": "Introduction",
   "cases": "cases",
   "plans": [
-    {"n": "Monitor", "pop": "Most popular", "for": "One process kept under control, with monthly actions.", "amt": "from € 2,250", "per": " / month",
-     "one": "+ one-off onboarding, 12-month term",
-     "f": ["Monthly data refresh", "Live dashboard", "Monthly insight session", "Quarterly improvement plan", "Licences included"],
-     "b": "Book a call", "href": "contact"},
-    {"n": "Continuous", "for": "Several processes and ongoing controls for audit and GRC.", "amt": "from € 5,500", "per": " / month",
-     "one": "up to 3 processes, + onboarding",
-     "f": ["Everything in Monitor", "Continuous controls monitoring", "Extra analyst hours on demand", "Action tracking", "Licences included"],
-     "b": "Request a proposal", "href": "contact"},
-    {"n": "Scan", "for": "Find out in four weeks what is going on in one process.", "amt": "from € 7,500", "per": "",
-     "one": "one-off, credited against a subscription",
-     "f": ["One process, one data extraction", "Analysis and report", "Findings workshop", "Credited within 60 days"],
-     "b": "See the scan", "href": "scan"},
+    {'n': 'Scan', 'for': 'Find out in four weeks what is going on in one process.', 'amt': 'from € 7,500', 'per': '', 'one': 'one-off, credited against a subscription', 'f': ['One process, one data extraction', 'Analysis and report', 'Findings workshop', 'Credited within 60 days'], 'b': 'See the scan', 'href': 'scan', 'tag': 'One-off'},
+    {'n': 'Monitor', 'for': 'One process kept under control, with monthly actions.', 'amt': 'from € 2,250', 'per': ' / month', 'one': '+ one-off onboarding, 12-month term', 'f': ['Monthly data refresh', 'Live dashboard', 'Monthly insight session', 'Quarterly improvement plan', 'Licences included'], 'b': 'Book a call', 'href': 'contact'},
+    {'n': 'Continuous', 'for': 'Several processes and ongoing controls for audit and GRC.', 'amt': 'from € 5,500', 'per': ' / month', 'one': 'up to 3 processes, + onboarding', 'f': ['Everything in Monitor', 'Continuous controls monitoring', 'Extra analyst hours on demand', 'Action tracking', 'Licences included'], 'b': 'Request a proposal', 'href': 'contact', 'tag': 'Most popular', 'hot': True},
   ],
  },
 }
@@ -169,9 +151,9 @@ def sc_plans(lang):
     out = []
     for p in T[lang]["plans"]:
         feats = "".join(f'<li><svg class="glyph"><use href="#i-check"/></svg>{f}</li>' for f in p["f"])
-        tag = f'<span class="tag">{p["pop"]}</span>' if p.get("pop") else ""
-        cls = "plan pop rv" if p.get("pop") else "plan rv"
-        btn = "btn btn--white" if p.get("pop") else "btn btn--ghost"
+        tag = f'<span class="tag">{p["tag"]}</span>' if p.get("tag") else ""
+        cls = "plan pop rv" if p.get("hot") else "plan rv"
+        btn = "btn btn--white" if p.get("hot") else "btn btn--ghost"
         per = f' <small>{p["per"].strip()}</small>' if p["per"] else ""
         out.append(f'<div class="{cls}">{tag}<h3>{p["n"]}</h3><p class="for">{p["for"]}</p>'
                    f'<div class="amt">{p["amt"]}{per}</div><p class="one">{p["one"]}</p><ul>{feats}</ul>'
