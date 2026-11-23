@@ -125,7 +125,7 @@ foreach ( $pages as $full => $p ) {
 	check( file_exists( $PLUGIN . 'templates/' . basename( $p['template'] ) ), "template file for $full" );
 }
 $sc = pm_site( 'scripts' );
-check( isset( $sc['pm-site/nl-home.php'], $sc['pm-site/en-home.php'] ) && in_array( 'hero', $sc['pm-site/nl-home.php'], true ) && in_array( 'chapters', $sc['pm-site/en-home.php'], true ), 'page scripts listed for both homes' );
+check( isset( $sc['pm-site/nl-home.php'], $sc['pm-site/en-home.php'] ) && in_array( 'demo', $sc['pm-site/nl-home.php'], true ) && in_array( 'chapters', $sc['pm-site/en-home.php'], true ), 'page scripts listed for both homes' );
 check( ! isset( $sc['pm-site/nl-aanpak.php'] ), 'no page scripts on sub pages' );
 
 /* 3. Connect all pages (admin) */
@@ -196,10 +196,10 @@ $STYLES->registered = array( 'astra-theme-css' => (object) array( 'src' => 'http
 	'elementor-frontend' => (object) array( 'src' => 'https://x.test/wp-content/plugins/elementor/frontend.css' ), 'some-plugin' => (object) array( 'src' => 'https://x.test/wp-content/plugins/cookie/style.css' ) );
 do_action( 'wp_enqueue_scripts' );
 check( in_array( 'style:pm-site', $ENQ, true ) && in_array( 'script:pm-site', $ENQ, true ), 'our css and js are enqueued' );
-check( in_array( 'script:pm-site-thread', $ENQ, true ) && in_array( 'script:pm-site-hero', $ENQ, true ) && in_array( 'script:pm-site-chapters', $ENQ, true ) && in_array( 'script:pm-site-demo', $ENQ, true ), 'thread, hero, chapters and demo scripts on the home page' );
+check( in_array( 'script:pm-site-thread', $ENQ, true ) && in_array( 'script:pm-site-chapters', $ENQ, true ) && in_array( 'script:pm-site-demo', $ENQ, true ), 'thread, chapters and demo scripts on the home page' );
 check( $STYLES->queue === array( 'some-plugin' ), 'theme and builder css removed, other plugins kept: ' . implode( ',', $STYLES->queue ) );
 $ENQ = array(); $Q = array( 'id' => $connected['nl:aanpak'] ); do_action( 'wp_enqueue_scripts' );
-check( ! in_array( 'script:pm-site-thread', $ENQ, true ) && ! in_array( 'script:pm-site-hero', $ENQ, true ), 'page scripts not on other pages' );
+check( ! in_array( 'script:pm-site-thread', $ENQ, true ) && ! in_array( 'script:pm-site-demo', $ENQ, true ), 'page scripts not on other pages' );
 
 /* 8. SEO and hreflang */
 $Q = array( 'id' => $connected['nl:aanpak'] );

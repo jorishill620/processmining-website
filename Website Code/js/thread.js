@@ -6,12 +6,15 @@
   var svg=document.createElementNS(NS,'svg');
   svg.setAttribute('class','thread');svg.setAttribute('aria-hidden','true');
   svg.innerHTML='<defs><linearGradient id="tg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="100">'+
-    '<stop id="g1" offset="0" stop-color="#8b3dff"/><stop id="g2" offset="1" stop-color="#8b3dff"/>'+
-    '<stop id="g3" offset="1" stop-color="#ffffff"/><stop id="g4" offset="1" stop-color="#ffffff"/></linearGradient></defs>'+
+    '<stop id="g1" offset="0" stop-color="#b48cff"/><stop id="g2" offset="1" stop-color="#8b3dff"/><stop id="g3" offset="1" stop-color="#6a2ee0"/>'+
+    '<stop id="g4" offset="1" stop-color="#ffffff"/><stop id="g5" offset="1" stop-color="#ffffff"/></linearGradient></defs>'+
+    '<path id="ttrack" fill="none" stroke="#8b3dff" stroke-opacity=".34" stroke-linecap="round" stroke-dasharray="0.1 10"/>'+   /* dotted route ahead */
+    '<path id="tglow" fill="none" stroke="url(#tg)" stroke-opacity=".2" stroke-linecap="round" stroke-linejoin="round"/>'+      /* soft halo */
     '<path id="tpath" fill="none" stroke="url(#tg)" stroke-linecap="round" stroke-linejoin="round"/>'+
+    '<path id="tsheen" fill="none" stroke="#ffffff" stroke-opacity=".38" stroke-linecap="round" stroke-linejoin="round"/>'+     /* light core */
     '<g id="tx"></g><circle id="tring"/><circle id="tdot"/><circle id="tpulse" style="display:none"/><circle id="tcase" style="display:none"/>';
   page.insertBefore(svg,page.firstChild);
-  var path=svg.querySelector('#tpath'),ring=svg.querySelector('#tring'),dot=svg.querySelector('#tdot'),tx=svg.querySelector('#tx'),cse=svg.querySelector('#tcase'),pls=svg.querySelector('#tpulse');
+  var path=svg.querySelector('#tpath'),track=svg.querySelector('#ttrack'),glow=svg.querySelector('#tglow'),sheen=svg.querySelector('#tsheen'),ring=svg.querySelector('#tring'),dot=svg.querySelector('#tdot'),tx=svg.querySelector('#tx'),cse=svg.querySelector('#tcase'),pls=svg.querySelector('#tpulse');
   var nodes=[],brs=[];
   var D=page.dataset;
   var LABELS=JSON.parse(D.labels||'[]'),COUNTS=JSON.parse(D.counts||'[]'),BRT=JSON.parse(D.branches||'[]'),CASES=D.cases||'cases';
@@ -40,7 +43,7 @@
     pageTop=page.getBoundingClientRect().top+window.scrollY;
     var wrap=page.querySelector('.wrap');
     var contentLeft=wrap.getBoundingClientRect().left-page.getBoundingClientRect().left+parseFloat(getComputedStyle(wrap).paddingLeft);
-    var sw=contentLeft>=100?32:(W>=700?10:6);                 /* thinner on tablet and mobile */
+    var sw=contentLeft>=100?18:(W>=700?9:5);                 /* thinner on tablet and mobile */
     var r=Math.max(16,Math.round(sw*2/16)*16);                /* 2x stroke, snapped to 16 */
     var xL=contentLeft/2,xR=W-xL;                             /* runs sit in the page margins */
     var a=pos(anchor),cx=a.x,cy=a.y,ringR=sw*2.5;
@@ -55,15 +58,16 @@
     pts.push([cur,dy]);
 
     svg.setAttribute('width',W);svg.setAttribute('height',H);svg.setAttribute('viewBox','0 0 '+W+' '+H);
-    path.setAttribute('d',rounded(pts,r));path.setAttribute('stroke-width',sw);
+    var dstr=rounded(pts,r);
+    [path,track,glow,sheen].forEach(function(e){e.setAttribute('d',dstr)});
+    path.setAttribute('stroke-width',sw);glow.setAttribute('stroke-width',sw*2.3);sheen.setAttribute('stroke-width',Math.max(2,sw*.16));track.setAttribute('stroke-width',Math.max(2,sw*.2));
     len=path.getTotalLength();
-    path.style.strokeDasharray=len;
+    [path,glow,sheen].forEach(function(e){e.style.strokeDasharray=len});
 
     /* hard colour switch at the top of the CTA block */
     var o=Math.min(1,ep.y/H);
     svg.querySelector('#tg').setAttribute('y2',H);
-    ['g2','g3','g4'].forEach(function(id,i){svg.querySelector('#'+id).setAttribute('offset',i<2?o:1)});
-    svg.querySelector('#g4').setAttribute('offset',1);
+    svg.querySelector('#g2').setAttribute('offset',o*.55);svg.querySelector('#g3').setAttribute('offset',o);svg.querySelector('#g4').setAttribute('offset',o);svg.querySelector('#g5').setAttribute('offset',1);
 
     ring.setAttribute('cx',cx);ring.setAttribute('cy',cy);ring.setAttribute('r',ringR);ring.setAttribute('stroke-width',sw);
     dot.setAttribute('cx',cur);dot.setAttribute('cy',dy);dot.setAttribute('r',Math.max(sw*.9,8));dot.setAttribute('stroke-width',Math.max(sw*.4,4));
@@ -136,7 +140,7 @@
         l=p.l+(t-p.t)/(q.t-p.t)*(q.l-p.l);
       }
     }
-    path.style.strokeDashoffset=len-l;
+    [path,glow,sheen].forEach(function(e){e.style.strokeDashoffset=len-l});
     if(l>0)ring.classList.add('on');else ring.classList.remove('on');
     dot.style.opacity=l>=len-0.5?1:0;
     nodes.forEach(function(n){n.el.classList.toggle('on',l>=n.l)});

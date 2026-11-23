@@ -27,6 +27,6 @@ Newest first. The version number is also the plugin version shown in WordPress.
 
 | Version | Date | What changed | Uploaded to |
 |---|---|---|---|
-| 1.0.20261123.1013 | 23 Nov 2026 | **Design branch `design-1centre`, for review, not for upload yet.** Home page: hero canvas, product window demo, chapters, dark "Analyseren" section with mini diagrams, proof section, header that follows the section, footer wordmark. (The floating call-to-action pill was removed again on request.) | not yet |
+| 1.0.20261123.1017 | 23 Nov 2026 | **Design branch `design-1centre`, for review, not for upload yet.** Home page: product window demo, chapters, dark "Analyseren" section with mini diagrams, proof section, header that follows the section, footer wordmark. (The floating call-to-action pill and the hero particles were removed again on request; the scroll thread was redesigned: thinner glowing tube with a light core, gradient and a dotted route ahead.) | not yet |
 | 1.0.20261120.0917 | 20 Nov 2026 | Copy: data extraction wording (stat block, FAQ "Wat heb ik zelf nodig?", "Tot op de bron") in Dutch and English. Check the home page. | not yet |
 | 1.0.20261019.1040 | 19 Oct 2026 | First version of the PM Site plugin: 12 pages in Dutch and English, setup screen, Yoast texts, hreflang | not yet |

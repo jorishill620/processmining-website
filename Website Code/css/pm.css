@@ -377,9 +377,6 @@ main#top{position:relative}
 .nav[data-theme="light"] .burger{color:#0a0a0f}
 .nav{transition:background .3s,border-color .3s}
 
-/* hero canvas */
-.hero__cv{position:absolute;inset:0;z-index:0;pointer-events:none;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 40%);mask-image:linear-gradient(90deg,transparent 0,#000 40%)}
-@media (max-width:980px){.hero__cv{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18%);mask-image:linear-gradient(90deg,transparent 0,#000 18%)}}
 
 /* product window */
 .win{container-type:inline-size;position:relative;z-index:2;margin:0;background:var(--black);border:1px solid #2c2c3a;border-radius:var(--r);overflow:hidden;color:#fff;box-shadow:0 40px 80px -34px rgba(20,10,50,.55)}

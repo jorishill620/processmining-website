@@ -13,7 +13,7 @@ Next.js + Tailwind, 51 CSS keyframe animations, 12 2D canvases, scroll reveals w
 - Details: rounded cards with hairline borders, small uppercase eyebrow labels, sections alternating dark / light / navy, content max width 1400px.
 
 ## Their interactive and animated components
-1. **Hero canvas:** dot-matrix "1" logo made of particles, light rays converging into a lens flare next to the headline.
+1. **Hero canvas (ours was removed again):** dot-matrix "1" logo made of particles, light rays converging into a lens flare next to the headline.
 2. **Header:** switches from transparent-on-dark to light-with-border depending on the section beneath it.
 3. **Floating bottom pill:** persistent "Contact sales / Book a demo" with a spinning dot-matrix logo.
 4. **Counters:** $25.6B, 414k+, 4.9★ count up from 0.
@@ -34,7 +34,7 @@ Next.js + Tailwind, 51 CSS keyframe animations, 12 2D canvases, scroll reveals w
 
 | # | Improvement | Reference | For us | Effort | Status |
 |---|---|---|---|---|---|
-| 1 ★ | **Signature hero canvas** | Particles converge into a "focus" | Event-log dots enter as chaos, line up along process lanes and converge into the ring where the scroll thread begins. Pauses off-screen; reduced-motion shows a still frame. | M | built |
+| 1 | Signature hero canvas | Particles converge into a "focus" | Event-log dots converging into the ring | M | built, then **removed on request** (Nov 2026) |
 | 2 | Calmer headline | Weight 500, tight tracking, two-tone | Montserrat 600 instead of 800, second line in grey | S | not built |
 | 3 | Animated, honest counters | Count-up from 0 once | Count-up for the stats, but only with real figures | S | not built |
 | 4 ★ | **Product in a real-looking window** | App windows with states | The flow diagram inside a window frame, with a variants table that fills in and a highlighted "afwijking" row | M | built |
