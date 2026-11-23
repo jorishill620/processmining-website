@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       PM Site
  * Description:       The processmining.nu design (Dutch and English) as page templates. Set up under PM Site in the admin menu. Generated from the static site; do not edit by hand.
- * Version:           1.0.20261123.1114
+ * Version:           1.0.20261123.1255
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Coney Solutions

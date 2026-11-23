@@ -156,7 +156,7 @@
     var seen=[];
 
     /* 1) "Koppelingen": the line runs behind every row of logo cards (they sit above the line), showing in the gaps
-       and leaving at the end; the cards light up one after another as it passes. No drops, no end nodes. */
+       and ending behind the last card; the cards light up one after another as it passes. No drops, no end nodes. */
     var grid=page.querySelector('.logos');
     if(grid){
       var gsec=grid.closest('section'),items=[].slice.call(grid.children).map(function(el){return {el:el,p:pos(el),w:el.offsetWidth,h:el.offsetHeight}}),rows={};
@@ -165,7 +165,7 @@
       Object.keys(rows).map(Number).sort(function(a,b){return a-b}).forEach(function(key){
         var row=rows[key].sort(function(a,b){return a.p.x-b.p.x}),midY=row[0].p.y+row[0].h/2,ln=onLine(midY);
         if(!ln||!ln.left){okAll=false;return}
-        var last=row[row.length-1],far=Math.min(last.p.x+last.w+24,W-4),pl=newPlug(ln.l,120);
+        var last=row[row.length-1],far=last.p.x+last.w/2,pl=newPlug(ln.l,120);          /* ends behind the last card */
         seg('M'+ln.x+' '+midY+' L'+far+' '+midY,far-ln.x,0,pl,.85);
         row.forEach(function(it){pl.els.push(it.el)});
         made.push(pl);
