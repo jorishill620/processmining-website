@@ -495,3 +495,12 @@ html:not(.js) .chapter__cv{display:none}
 .foot__wm span{display:inline-block;font:800 10.3vw/1 var(--h);letter-spacing:-.045em;white-space:nowrap;padding-bottom:.1em;
   background:linear-gradient(180deg,rgba(255,255,255,.24) 22%,rgba(255,255,255,.035) 78%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 .foot__wm+.wrap .legal{margin-top:6px}
+
+/* the thread plugs into cards: branch, end node, lit card */
+.tstub{fill:none;stroke:var(--purple);stroke-linecap:round;transition:stroke-dashoffset .45s cubic-bezier(.2,.7,.2,1)}
+.tpn{fill:#fff;stroke:var(--purple);stroke-width:3;opacity:0;transform-box:fill-box;transform-origin:center}
+.tpn.on{opacity:1;animation:tpn-pop .5s .35s both}
+@keyframes tpn-pop{0%{opacity:0;transform:scale(.3)}60%{opacity:1;transform:scale(1.35)}100%{opacity:1;transform:scale(1)}}
+.plan,.win{transition:box-shadow .4s}
+.plugged{box-shadow:0 0 0 1.5px var(--purple),0 22px 60px -18px rgba(139,61,255,.6)!important}
+@media (prefers-reduced-motion:reduce){.tstub{transition:none}.tpn.on{animation:none;opacity:1}}

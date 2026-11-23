@@ -6,7 +6,7 @@
   var svg=document.createElementNS(NS,'svg');
   svg.setAttribute('class','thread');svg.setAttribute('aria-hidden','true');
   svg.innerHTML='<defs><linearGradient id="tg" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="100">'+
-    '<stop id="g1" offset="0" stop-color="#b48cff"/><stop id="g2" offset="1" stop-color="#8b3dff"/><stop id="g3" offset="1" stop-color="#6a2ee0"/>'+
+    '<stop id="g1" offset="0" stop-color="#8b3dff"/><stop id="g2" offset="1" stop-color="#8b3dff"/><stop id="g3" offset="1" stop-color="#8b3dff"/>'+
     '<stop id="g4" offset="1" stop-color="#ffffff"/><stop id="g5" offset="1" stop-color="#ffffff"/></linearGradient></defs>'+
     '<path id="ttrack" fill="none" stroke="#8b3dff" stroke-opacity=".34" stroke-linecap="round" stroke-dasharray="0.1 10"/>'+   /* dotted route ahead */
     '<path id="tglow" fill="none" stroke="url(#tg)" stroke-opacity=".2" stroke-linecap="round" stroke-linejoin="round"/>'+      /* soft halo */
@@ -15,7 +15,7 @@
     '<g id="tx"></g><circle id="tring"/><circle id="tdot"/><circle id="tpulse" style="display:none"/><circle id="tcase" style="display:none"/>';
   page.insertBefore(svg,page.firstChild);
   var path=svg.querySelector('#tpath'),track=svg.querySelector('#ttrack'),glow=svg.querySelector('#tglow'),sheen=svg.querySelector('#tsheen'),ring=svg.querySelector('#tring'),dot=svg.querySelector('#tdot'),tx=svg.querySelector('#tx'),cse=svg.querySelector('#tcase'),pls=svg.querySelector('#tpulse');
-  var nodes=[],brs=[];
+  var nodes=[],brs=[],plugs=[];
   var D=page.dataset;
   var LABELS=JSON.parse(D.labels||'[]'),COUNTS=JSON.parse(D.counts||'[]'),BRT=JSON.parse(D.branches||'[]'),CASES=D.cases||'cases';
   var BR={1:{t:BRT[0]},3:{t:BRT[1],hot:1},5:{t:BRT[2]}};
@@ -123,6 +123,30 @@
       else{var t2=mk('text',{x:w/2,y:38,'text-anchor':'middle',class:'ct'},g);t2.textContent=COUNTS[i]+' '+CASES}
       nodes.push({el:g,l:mid});
     });
+
+    /* plugs: where the line runs right next to a card (no text in between), a branch grows out to it and the
+       card lights up when the pen tip passes. One per section, only for cards on the same side as the line. */
+    plugs.forEach(function(p){p.el.classList.remove('plugged')});plugs=[];
+    var cum=[],c0=0;segs.forEach(function(s){cum.push(c0);c0+=s.l});
+    var seen=[],marg=r*1.6+sw,cands=[].slice.call(page.querySelectorAll('.step,.lcard,.sec--bento .card,.aud a,.plan,.win'));
+    cands.map(function(el){return {el:el,p:pos(el)}}).sort(function(a,b){return a.p.y-b.p.y}).forEach(function(c){
+      var el=c.el,sec=el.closest('section');if(!sec||seen.indexOf(sec)>-1)return;
+      var w=el.offsetWidth,h=el.offsetHeight,yt=c.p.y+Math.min(h/2,70),j=-1;
+      for(var s=0;s<segs.length;s++){
+        if(segs[s].h)continue;
+        var ya=Math.min(pts[s][1],pts[s+1][1]),yb2=Math.max(pts[s][1],pts[s+1][1]);
+        if(yt>ya+marg&&yt<yb2-marg){j=s;break}
+      }
+      if(j<0)return;
+      var x=pts[j][0],left=Math.abs(x-xL)<2,edge=left?c.p.x:c.p.x+w,target=left?contentLeft:W-contentLeft;
+      if(Math.abs(edge-target)>8)return;                       /* not at the content edge: text would be in the way */
+      var rn=Math.max(4,sw*.38),dx=Math.abs(edge-x)-rn;if(dx<4)return;
+      var nx=left?edge-rn:edge+rn;
+      var stub=mk('path',{class:'tstub',d:'M'+x+' '+yt+' L'+nx+' '+yt,'stroke-width':Math.max(2,sw*.28)},tx);
+      stub.style.strokeDasharray=dx;stub.style.strokeDashoffset=dx;
+      var node=mk('circle',{class:'tpn',cx:nx,cy:yt,r:rn},tx);
+      plugs.push({el:el,stub:stub,node:node,len:dx,l:(cum[j]+Math.abs(yt-pts[j][1]))*k});seen.push(sec);
+    });
     ready=true;draw();
   }
 
@@ -144,6 +168,7 @@
     if(l>0)ring.classList.add('on');else ring.classList.remove('on');
     dot.style.opacity=l>=len-0.5?1:0;
     nodes.forEach(function(n){n.el.classList.toggle('on',l>=n.l)});
+    plugs.forEach(function(p){var on=l>=p.l;p.stub.style.strokeDashoffset=on?0:p.len;p.node.classList.toggle('on',on);p.el.classList.toggle('plugged',on)});
     brs.forEach(function(b){var on=l>=b.mid;b.path.style.strokeDashoffset=on?0:b.len;if(b.chip)b.chip.classList.toggle('on',on)});
     if(!reduce&&l>0&&l<len-0.5){
       var pt=path.getPointAtLength(l);
