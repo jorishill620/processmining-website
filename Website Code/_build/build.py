@@ -49,7 +49,6 @@ T = {
   "cta_p": "Stuur ons een voorbeeldextract en je krijgt binnen een week drie afwijkingen terug, gratis en zonder verplichtingen.",
   "cta_b1": "Vraag je gratis X-ray aan", "cta_b2": "Plan een kennismaking", "cta_s1": "Gratis%20X-ray", "cta_s2": "Kennismaking",
   "cases": "cases",
-  "fcta": ("Gratis X-ray", "Plan een gesprek", "Sluiten"),
   "plans": [
     {"n": "Monitor", "pop": "Meest gekozen", "for": "Eén proces blijvend onder controle, met maandelijkse acties.", "amt": "v.a. € 2.250", "per": " / maand",
      "one": "+ eenmalige onboarding, looptijd 12 maanden",
@@ -88,7 +87,6 @@ T = {
   "cta_p": "Send us a sample extract and within a week you get three deviations back, free of charge and without obligation.",
   "cta_b1": "Request your free X-ray", "cta_b2": "Book an introduction", "cta_s1": "Free%20X-ray", "cta_s2": "Introduction",
   "cases": "cases",
-  "fcta": ("Free X-ray", "Book a call", "Close"),
   "plans": [
     {"n": "Monitor", "pop": "Most popular", "for": "One process kept under control, with monthly actions.", "amt": "from € 2,250", "per": " / month",
      "one": "+ one-off onboarding, 12-month term",
@@ -219,16 +217,6 @@ def header(lang, slug_nl, nav_key):
 </header>'''
 
 
-def fcta(lang):
-    t = T[lang]
-    a, b, close = t["fcta"]
-    return (f'<div class="fcta" id="fcta" role="region" aria-label="{a}">\n  <svg class="fcta__mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#8b3dff"/>'
-            f'<path d="M9 16L23 9M9 16L23 23" stroke="#fff" stroke-width="2"/><circle cx="9" cy="16" r="3" fill="#fff"/><circle cx="23" cy="9" r="3" fill="#fff"/><circle cx="23" cy="23" r="3" fill="#fff"/></svg>\n'
-            f'  <a class="fcta__a" href="mailto:{EMAIL}?subject={t["cta_s1"]}">{a}</a>\n'
-            f'  <a class="fcta__b" href="{href(lang, "contact", "")}">{b} <svg class="glyph" aria-hidden="true"><use href="#i-arrow"/></svg></a>\n'
-            f'  <button class="fcta__x" type="button" aria-label="{close}"><svg class="glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>\n</div>')
-
-
 def footer(lang):
     t = T[lang]
     cols = "".join(
@@ -274,7 +262,6 @@ def build_page(lang, slug_nl, slug_en):
     alt = "" if slug_nl == "404" else (f'<link rel="alternate" hreflang="nl" href="{nl_url}">\n<link rel="alternate" hreflang="en" href="{en_url}">\n'
                                        f'<link rel="alternate" hreflang="x-default" href="{nl_url}">\n<link rel="canonical" href="{own}">\n')
     main_attrs = " " + meta["main"] if meta.get("main") else ""
-    fcta_html = "" if meta.get("fcta") == "no" else fcta(lang)
     scripts = '<script src="{{root}}js/site.js" defer></script>'
     for name in meta.get("scripts", "").split():
         scripts += '\n<script src="{{root}}js/%s.js" defer></script>' % name
@@ -303,7 +290,6 @@ def build_page(lang, slug_nl, slug_en):
 {body.strip()}
 </main>
 {footer(lang)}
-{fcta_html}
 {scripts}
 </body>
 </html>

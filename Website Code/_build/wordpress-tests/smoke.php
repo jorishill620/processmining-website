@@ -167,7 +167,7 @@ foreach ( $templates as $tkey => $label ) {
 check( 0 === $bad, 'no template threw' );
 ob_start(); include $PLUGIN . 'templates/nl-home.php'; $nlh = ob_get_clean();
 ob_start(); include $PLUGIN . 'templates/nl-contact.php'; $nlc = ob_get_clean();
-check( false !== strpos( $nlh, 'id="fcta"' ) && false === strpos( $nlc, 'id="fcta"' ), 'floating pill on the home page, not on contact' );
+check( false === strpos( $nlh, 'fcta' ) && false === strpos( $nlc, 'fcta' ), 'no floating pill' );
 check( 4 === substr_count( $nlh, 'class="chapter__cv"' ) && false !== strpos( $nlh, 'id="win"' ), 'chapters and product window on the home page' );
 ob_start(); include $PLUGIN . 'templates/en-home.php'; $en = ob_get_clean();
 check( false !== strpos( $en, 'href="https://stage.test/en/approach/"' ) || false !== strpos( $en, 'https://stage.test/en/' ), 'english home links to english pages' );

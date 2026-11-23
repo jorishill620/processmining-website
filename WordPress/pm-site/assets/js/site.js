@@ -2,8 +2,6 @@
   document.documentElement.classList.add('js');
   var nav=document.getElementById('nav'),b=document.getElementById('burger');
   var secs=[].slice.call(document.querySelectorAll('main > section, main > .marq'));
-  var f=document.getElementById('fcta'),fx=f&&f.querySelector('.fcta__x'),fdone=false;
-  try{fdone=sessionStorage.getItem('pm-fcta')==='1'}catch(e){}
 
   /* header follows the section underneath it (dark / light) */
   function theme(){
@@ -14,23 +12,10 @@
     }
     if(nav.getAttribute('data-theme')!==t)nav.setAttribute('data-theme',t);
   }
-  /* floating call-to-action: after the hero, not next to the closing call-to-action or footer */
-  function pill(){
-    if(!f)return;
-    var show=!fdone&&window.scrollY>window.innerHeight*.7;
-    if(show){
-      ['.cta','footer'].forEach(function(sel){
-        var el=document.querySelector(sel);
-        if(el&&el.getBoundingClientRect().top<window.innerHeight*.92)show=false;
-      });
-    }
-    f.classList.toggle('show',show);
-  }
   var tick=false;
-  function frame(){tick=false;nav.classList.toggle('solid',window.scrollY>20);theme();pill()}
+  function frame(){tick=false;nav.classList.toggle('solid',window.scrollY>20);theme()}
   function onScroll(){if(!tick){tick=true;requestAnimationFrame(frame)}}
   frame();addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll);addEventListener('load',onScroll);
-  if(fx)fx.addEventListener('click',function(){fdone=true;try{sessionStorage.setItem('pm-fcta','1')}catch(e){}f.classList.remove('show')});
 
   b.addEventListener('click',function(){var o=nav.classList.toggle('open');b.setAttribute('aria-expanded',o)});
   nav.querySelectorAll('.menu a').forEach(function(a){a.addEventListener('click',function(){nav.classList.remove('open')})});

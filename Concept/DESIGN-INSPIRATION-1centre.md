@@ -45,7 +45,7 @@ Next.js + Tailwind, 51 CSS keyframe animations, 12 2D canvases, scroll reveals w
 | 9 | Connector hub | Logo in the middle, bureaux on dotted lines | SAP, Oracle, Exact … around the PM.nu mark with data pulses | M | not built |
 | 10 ★ | **Chapters with giant one-word headings** | "Open. Decide. Watch. Prove." in halftone | "Ophalen. Analyseren. Handelen. Volgen." (EN: Connect. Analyse. Act. Monitor.), alternating dark and light sections | M | built |
 | 11 ★ | **Header follows the section** | Header changes with the background | Header turns light over light sections | S | built |
-| 12 ★ | **Floating call-to-action pill** | Persistent bar after the hero | Pill with the logo mark, "Gratis X-ray" and "Plan een gesprek"; hides near the closing call-to-action; full-width bar on phones; can be dismissed | S | built |
+| 12 | Floating call-to-action pill | Persistent bar after the hero | Pill with the logo mark and "Gratis X-ray" / "Plan een gesprek" | S | built, then **removed on request** (Nov 2026) |
 | 13 | Marquee polish | Slow loop, faded edges | Pause on hover, second row in the opposite direction | S | not built |
 | 14 | A small set of ambient effects | Drifting dot texture, scan line, ping rings, 14px rise-in | Pick three or four and use them everywhere; reveal 28px → 14px | S | partly (rise-in, scan, ping used in the new parts) |
 | 15 | Motion discipline | 25 reduced-motion rules | Reduced-motion for every new effect; pause canvases and loops off-screen | S | built (all new effects) |
@@ -59,13 +59,12 @@ Next.js + Tailwind, 51 CSS keyframe animations, 12 2D canvases, scroll reveals w
 - New story order: Probleem → Werkwijze → **Ophalen.** (Koppelingen) → **Analyseren.** (Wat je krijgt) → **Handelen.** (Voor wie) → **Volgen.** (Prijzen) → Proof (varianten) → FAQ → call-to-action. Pricing moves down, after "Voor wie"; backgrounds alternate light and dark.
 - The "Wat je krijgt" section turns dark, with mini diagrams in the cards.
 - The flow diagram in "Het probleem" becomes a product window with a cursor demo.
-- Sub-pages get the header and floating pill; their layout is unchanged.
+- Sub-pages get the header behaviour; their layout is unchanged. (The floating pill was built and then removed on request.)
 
 ## Review checklist
 - [ ] Is the hero canvas calm enough next to the headline (not distracting)?
 - [ ] Does the new order of the home page read well, especially pricing moved down?
 - [ ] Are the chapter words the right words in Dutch and English?
-- [ ] Is the floating pill welcome, or too pushy? (It can be switched off per page.)
 - [ ] Proof section: the numbers are illustrative demo data and labelled as such. Keep, or wait for real figures?
 - [ ] Which of the not-built items should come next? Suggestion: 6, 9, 16.
 
